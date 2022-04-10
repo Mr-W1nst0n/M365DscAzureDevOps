@@ -92,7 +92,7 @@ $ConfigurationData = @{
     )
 }
 
-# Build and Push
+# Compile MOF file
 $password = ConvertTo-SecureString $AdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($AdminCredential, $password)
 M365TenantConfig -ConfigurationData $ConfigurationData -AdminCredential $credential
