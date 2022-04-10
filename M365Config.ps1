@@ -69,8 +69,8 @@ Configuration M365TenantConfig
         SPOSite 'M365DemoSite'
         {
             Ensure                                      = 'Present'
-            Title                                       = 'M365DSC - Demo'
-            Url                                         = 'https://x282t.sharepoint.com/sites/M365DSC'
+            Title                                       = 'M365DSC - DevOps'
+            Url                                         = 'https://x282t.sharepoint.com/sites/DevOps'
             Template                                    = 'STS#3'
             TimeZoneId                                  = 13
             LocaleId                                    = 1033
