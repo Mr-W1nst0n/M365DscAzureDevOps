@@ -86,13 +86,13 @@ Configuration M365TenantConfig
 $ConfigurationData = @{
     AllNodes = @(
         @{
-            NodeNade = 'localhost'
-            PSDCAllowPlaintextPassword = $true
+            NodeName = 'localhost'
+            PsDscAllowPlainTextPassword = $true
         }
     )
 }
 
-# Compile MOF file
+# Build and Push
 $password = ConvertTo-SecureString $AdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($AdminCredential, $password)
 M365TenantConfig -ConfigurationData $ConfigurationData -AdminCredential $credential
