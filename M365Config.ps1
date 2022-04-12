@@ -32,7 +32,7 @@ Configuration M365TenantConfig
             NotificationsInOneDriveForBusinessEnabled = $true
             NotifyOwnersWhenInvitationsAccepted       = $true
             OneDriveForGuestsEnabled                  = $false
-            OrphanedPersonalSitesRetentionPeriod      = 60
+            OrphanedPersonalSitesRetentionPeriod      = 30
             Credential                                = $AdminCredential
         }
 
@@ -69,8 +69,8 @@ Configuration M365TenantConfig
         SPOSite 'M365DemoSite'
         {
             Ensure                                      = 'Present'
-            Title                                       = 'M365DSC - DevOps'
-            Url                                         = 'https://x282t.sharepoint.com/sites/DevOps'
+            Title                                       = 'M365DSC - Demo'
+            Url                                         = 'https://x282t.sharepoint.com/sites/M365DSC'
             Template                                    = 'STS#3'
             TimeZoneId                                  = 13
             LocaleId                                    = 1033
@@ -92,7 +92,7 @@ $ConfigurationData = @{
     )
 }
 
-# Generate MOF file
+# Build and Push
 $password = ConvertTo-SecureString $AdminPassword -AsPlainText -Force
 $credential = New-Object System.Management.Automation.PSCredential ($AdminCredential, $password)
 M365TenantConfig -ConfigurationData $ConfigurationData -AdminCredential $credential
