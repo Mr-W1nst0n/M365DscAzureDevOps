@@ -1,23 +1,41 @@
 param (
     [Parameter()]
     [System.String]
-    $AdminCredential,
+    $OrgName,
 
     [Parameter()]
     [System.String]
-    $AdminPassword
+    $TenantId,
+
+    [Parameter()]
+    [System.String]
+    $ApplicationId,
+
+    [Parameter()]
+    [System.String]
+    $CertificateId
 )
 
 Configuration M365TenantConfig
 {
     param (
         [parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $AdminCredential
-    )
+        [System.String]
+        $OrgName,
 
-    $TenantDomain = $AdminCredential.UserName.Split('@')[1]
-    
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $TenantId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CertificateId
+    )
+  
     Import-DscResource -ModuleName 'Microsoft365DSC'
 
     Node localhost
@@ -33,9 +51,9 @@ Configuration M365TenantConfig
             NotifyOwnersWhenInvitationsAccepted       = $true
             OneDriveForGuestsEnabled                  = $false
             OrphanedPersonalSitesRetentionPeriod      = 60
-            ApplicationId                             = $ConfigurationData.AllNodes.ApplicationId
-            CertificateThumbprint                     = $ConfigurationData.AllNodes.CertificateId
-            TenantId                                  = $ConfigurationData.AllNodes.TenantId
+            ApplicationId                             = $ApplicationId
+            CertificateThumbprint                     = $CertificateId
+            TenantId                                  = $TenantId
         }
 
         SPOAccessControlSettings 'ConfigureAccessControlSettings'
@@ -47,9 +65,9 @@ Configuration M365TenantConfig
             DisplayStartASiteOption                   = $false
             ExternalServicesEnabled                   = $false
             SocialBarOnSitePagesDisabled              = $true
-            ApplicationId                             = $ConfigurationData.AllNodes.ApplicationId
-            CertificateThumbprint                     = $ConfigurationData.AllNodes.CertificateId
-            TenantId                                  = $ConfigurationData.AllNodes.TenantId
+            ApplicationId                             = $ApplicationId
+            CertificateThumbprint                     = $CertificateId
+            TenantId                                  = $TenantId
         }
 
         SPOSharingSettings 'ConfigureSharingSettings'
@@ -67,9 +85,9 @@ Configuration M365TenantConfig
             ShowPeoplePickerSuggestionsForGuestUsers  = $false
             PreventExternalUsersFromResharing         = $true
             NotifyOwnersWhenItemsReshared             = $true
-            ApplicationId                             = $ConfigurationData.AllNodes.ApplicationId
-            CertificateThumbprint                     = $ConfigurationData.AllNodes.CertificateId
-            TenantId                                  = $ConfigurationData.AllNodes.TenantId
+            ApplicationId                             = $ApplicationId
+            CertificateThumbprint                     = $CertificateId
+            TenantId                                  = $TenantId
         }
 
         SPOSite 'M365DemoSite'
@@ -80,13 +98,13 @@ Configuration M365TenantConfig
             Template                                    = 'STS#3'
             TimeZoneId                                  = 13
             LocaleId                                    = 1033
-            Owner                                       = "MOD1@$TenantDomain"
+            Owner                                       = "MOD1@$OrgName"
             AnonymousLinkExpirationInDays               = 15
             CommentsOnSitePagesDisabled                 = $true
             DisableFlows                                = $true
-            ApplicationId                             = $ConfigurationData.AllNodes.ApplicationId
-            CertificateThumbprint                     = $ConfigurationData.AllNodes.CertificateId
-            TenantId                                  = $ConfigurationData.AllNodes.TenantId
+            ApplicationId                             = $ApplicationId
+            CertificateThumbprint                     = $CertificateId
+            TenantId                                  = $TenantId
         }
     }
 }
@@ -96,14 +114,9 @@ $ConfigurationData = @{
         @{
             NodeName = 'localhost'
             PsDscAllowPlainTextPassword = $false
-            ApplicationId = '4b525de4-bc33-4294-b0a1-e482b7c4952c'
-            CertificateId = '59114ACB8FF5CC5F165CB08DB88C625733740E6A'
-            TenantId = 'x282t.onmicrosoft.com'
         }
     )
 }
 
 # Generate MOF file
-$password = ConvertTo-SecureString $AdminPassword -AsPlainText -Force
-$credential = New-Object System.Management.Automation.PSCredential ($AdminCredential, $password)
-M365TenantConfig -ConfigurationData $ConfigurationData -AdminCredential $credential
+M365TenantConfig -ConfigurationData $ConfigurationData -OrgName $OrgName -TenantId $TenantId -ApplicationId $ApplicationId -CertificateId $CertificateId
