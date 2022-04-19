@@ -1,0 +1,35 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+   include:
+    - M365Config.ps1
+pool:
+  name: Microsoft365Dsc
+steps:
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'M365DSC-AVANADELAB'
+    KeyVaultName: 'M365Secret'
+    SecretsFilter: 'DSConfigAdmin,password'
+    RunAsPreJob: true
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
+      .\M365Config.ps1 -AdminCredential $(DSConfigAdmin) -AdminPassword $(password)
+- task: CopyFiles@2
+  displayName: 'Copy Files Build Folder'
+  inputs:
+    SourceFolder: .
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Package'
+  inputs:
+    ArtifactName: 'M365DSC-Config'
