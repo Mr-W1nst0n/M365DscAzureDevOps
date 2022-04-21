@@ -27,6 +27,8 @@ M365Dsc CI/CD Pipelines using AzureDevOps
 
 ### Extra  
 
+- Used to Generate and Set-up the Certificates in **02** and **03**  
+
 ```ruby
 '00-ConfigureLCM.ps1' -- #(Configure LCM on Self-Hosted Pool)
 '00-Generate-SelfSignCertificate.ps1' -- #(Generate a SelfSign DSC Certificate)
