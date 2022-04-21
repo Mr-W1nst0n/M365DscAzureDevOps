@@ -40,7 +40,7 @@ Configuration M365TenantConfig
 
     Node localhost
     {
-        ODSettings 'OneDriveSedttings'
+        ODSettings 'OneDriveSettings'
         {
             Ensure                                    = 'Present'
             IsSingleInstance                          = 'Yes'
